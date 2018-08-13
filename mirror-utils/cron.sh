@@ -1,2 +1,4 @@
 #!/bin/sh
-crond -b
+set -e
+
+echo "$1" | crontab - && crond -f -L -
