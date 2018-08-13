@@ -3,6 +3,7 @@
 from ping3 import ping, verbose_ping
 import json
 import requests
+import statistics
 from urllib.parse import urlsplit
 
 def get_best_mirrors():
@@ -25,7 +26,13 @@ def get_best_mirrors():
     for mirror in rsync_mirrors:
         url = mirror
         base_url = "{0.netloc}".format(urlsplit(url))
-        p = ping(base_url, unit='ms')
+        # Make 5 pings (or 1 if first cannot be done)...
+        q = [ping(base_url, unit='ms')]
+        q += [ping(base_url, unit='ms') for _ in range(0, 4)] if q[0] is not None else []
+        # ...delete the None values
+        r = [x for x in q if x is not None]
+        # ...get the mean if list is not empy
+        p = statistics.mean(r) if len(r) > 0 else None
 
         if p is None:
             pass
