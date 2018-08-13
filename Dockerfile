@@ -12,7 +12,7 @@ RUN apk update
 RUN apk add python3 rsync
 RUN pip3 install -r requirements.txt
 
-ENTRYPOINT ["/cron.sh"]
+ENTRYPOINT ["/mirror/cron.sh"]
 
 
 
