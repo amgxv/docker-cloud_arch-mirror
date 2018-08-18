@@ -9,6 +9,7 @@ def fetch_mirror():
 
     mirror_file="./mirrors.txt"
     if os.path.isfile(mirror_file) == False:
+        print("Mirror file not detected...")
         bestmirror.get_best_mirrors()
         
     # Get mirrors from textfile and it starts rsync if ping goes well
@@ -20,8 +21,10 @@ def fetch_mirror():
         p = ping(base_url, unit='ms')
 
         if p is None:
+            print("Error fetching mirror {mirror}".format(mirror=mirror))
             pass
         if p is not None:
+            print ("Fetching latests packages from : {mirror}".format(mirror=mirror))
             os.system("rsync -rtlvH --delete-after --delay-updates --safe-links {mirror} {path}".format(mirror=mirror, path="./mirror"))
             break
 
