@@ -27,6 +27,8 @@ def fetch_mirror():
             print ("Fetching latest packages from : {mirror}".format(mirror=mirror))
             os.system("rsync -rtlvH --delete-after --delay-updates --safe-links {mirror} {path}".format(mirror=mirror, path="./mirror"))
             break
+    
+    print("Mirror updated successfully!")
 
 if __name__ == "__main__":
     fetch_mirror()
