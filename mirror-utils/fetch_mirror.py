@@ -24,7 +24,7 @@ def fetch_mirror():
             print("Error fetching mirror {mirror}".format(mirror=mirror))
             pass
         if p is not None:
-            print ("Fetching latests packages from : {mirror}".format(mirror=mirror))
+            print ("Fetching latest packages from : {mirror}".format(mirror=mirror))
             os.system("rsync -rtlvH --delete-after --delay-updates --safe-links {mirror} {path}".format(mirror=mirror, path="./mirror"))
             break
 
