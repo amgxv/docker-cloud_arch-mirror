@@ -1,0 +1,5 @@
+rsync://arch.mirror.constant.com/archlinux/
+rsync://arch.mirror.far.fi/archlinux/
+rsync://archlinux.c3sl.ufpr.br/archlinux/
+rsync://archlinux.ip-connect.vn.ua/archlinux/
+rsync://archlinux.polymorf.fr/archlinux/

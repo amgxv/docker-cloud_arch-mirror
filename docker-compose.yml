@@ -1,0 +1,35 @@
+version: '3.3'
+services:
+  fetch_mirror:
+    image: amgxv/cloud_arch_mirror:latest
+    volumes:
+      - LOCAL_PATH_TO_MIRROR:/mirror/mirror 
+    tty: true
+    restart: always
+  mirror_server:
+    image: nginx:latest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:host;PathPrefix:/path"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.priority=20"
+    restart: always
+    volumes:
+      - LOCAL_PATH_TO_MIRROR:/mirror-data:ro
+      - ./nginx_mirror/default.conf:/etc/nginx/conf.d/default.conf:ro
+  traefik:
+    image: traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.toml:/etc/traefik/traefik.toml:ro
+      - traefik_acme:/etc/traefik/acme
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+
+volumes:
+  traefik_acme:
+
+
+
