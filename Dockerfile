@@ -6,7 +6,6 @@ RUN mv /mirror/root /etc/crontabs/root
 WORKDIR /mirror
 RUN chmod +x fetch_mirror.py
 RUN chmod +x bestmirror.py
-RUN chmod +x cron.sh
 
 RUN apk update
 RUN apk add python3 rsync
