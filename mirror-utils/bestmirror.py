@@ -4,7 +4,13 @@ from ping3 import ping, verbose_ping
 import json
 import requests
 import statistics
+import logging
 from urllib.parse import urlsplit
+
+# Log Format
+logformat = '%(asctime)s - %(levelname)s - %(name)s - %(message)s' 
+logging.basicConfig(level=logging.INFO, format=logformat)
+logger = logging.getLogger(__name__)
 
 def get_best_mirrors():
     # Get all working tier 1 mirrors
@@ -21,11 +27,12 @@ def get_best_mirrors():
             rsync_mirrors.append(mirror)
 
     # Ping mirrors to get the closer and stable mirror
-    print ("Pinging mirrors...")
+    logger.info("Pinging mirrors...")
     ping_results = []
     for mirror in rsync_mirrors:
         url = mirror
         base_url = "{0.netloc}".format(urlsplit(url))
+        logger.info(f"Pinging : {mirror}")
         # Make 5 pings (or 1 if first cannot be done)...
         q = [ping(base_url, unit='ms')]
         q += [ping(base_url, unit='ms') for _ in range(0, 4)] if q[0] is not None else []
@@ -46,9 +53,10 @@ def get_best_mirrors():
     limit = [sorted_mirrors[x] for x in range(0,5)]
 
     # Write closest mirrors to a textfile
-    f = open('./mirrors.txt','w')
+    f = open('./mirrors','w')
     for mirror in limit:
         f.write(f'{mirror}\n')
+    f.close()
 
 if __name__ == "__main__":
     get_best_mirrors()
