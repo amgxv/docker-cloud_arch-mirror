@@ -1,11 +1,21 @@
 version: '3.3'
 services:
-  fetch_mirror:
-    image: amgxv/cloud_arch_mirror:latest
+  tasker:
+    image: strm/tasker
     volumes:
-      - LOCAL_PATH_TO_MIRROR:/mirror/mirror 
-    tty: true
-    restart: always
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      configuration: |
+        schedule:
+          - every: 3 hours
+            task: fetch arch mirror
+        tasks:
+          docker:
+            - name: fetch arch mirror
+              image: amgxv/cloud_arch_mirror:latest
+              volumes:
+                - LOCAL_PATH_TO_MIRRORS_FILE:/mirror/mirrors.txt:rw
+                - LOCAL_PATH_TO_MIRROR:/mirror/mirror
   mirror_server:
     image: nginx:latest
     labels:

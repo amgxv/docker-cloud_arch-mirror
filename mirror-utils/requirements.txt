@@ -1,2 +1,2 @@
-ping3
-requests
+ping3==2.5.1
+requests==2.23.0

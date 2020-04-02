@@ -21,34 +21,41 @@ def get_best_mirrors():
             rsync_mirrors.append(mirror)
 
     # Ping mirrors to get the closer and stable mirror
-    print ("Pinging mirrors...")
+    print ("-> Started pinging mirrors...")
     ping_results = []
-    for mirror in rsync_mirrors:
-        url = mirror
-        base_url = "{0.netloc}".format(urlsplit(url))
-        # Make 5 pings (or 1 if first cannot be done)...
-        q = [ping(base_url, unit='ms')]
-        q += [ping(base_url, unit='ms') for _ in range(0, 4)] if q[0] is not None else []
-        # ...delete the None values
-        r = [x for x in q if x is not None]
-        # ...get the mean if list is not empy
-        p = statistics.mean(r) if len(r) > 0 else None
+    try:
+        for mirror in rsync_mirrors:
+            url = mirror
+            base_url = "{0.netloc}".format(urlsplit(url))
+            # Make 5 pings (or 1 if first cannot be done)...
+            q = [ping(base_url, unit='ms')]
+            q += [ping(base_url, unit='ms') for _ in range(0, 4)] if q[0] is not None else []
+            # ...delete the None values
+            r = [x for x in q if x is not None]
+            # ...get the mean if list is not empy
+            p = statistics.mean(r) if len(r) > 0 else None
 
-        if p is None:
-            pass
-        else:
-            rounded = round((p),2)
-            ping_result = tuple([mirror, rounded])
-            ping_results.append(ping_result)
+            if p is None:
+                print(f"{base_url} -> {p}")
+                pass
+            else:
+                rounded = round((p),2)
+                print(f"{base_url} -> {rounded}")
+                ping_result = tuple([mirror, rounded])
+                ping_results.append(ping_result)
 
-    elements = len(ping_results)
-    sorted_mirrors = sorted([ping_results[x][0] for x in range(0,elements)])
-    limit = [sorted_mirrors[x] for x in range(0,5)]
+        elements = len(ping_results)
+        sorted_mirrors = sorted([ping_results[x][0] for x in range(0,elements)])
+        limit = [sorted_mirrors[x] for x in range(0,5)]
 
-    # Write closest mirrors to a textfile
-    f = open('./mirrors.txt','w')
-    for mirror in limit:
-        f.write(f'{mirror}\n')
+        # Write closest mirrors to a textfile
+        if limit is not None:
+            f = open('mirrors.txt','w')
+            for mirror in limit:
+                f.write(f'{mirror}\n')
+
+    except Exception as e:
+        print(f"<!> ERROR : {e}")
 
 if __name__ == "__main__":
     get_best_mirrors()
